@@ -2,6 +2,8 @@
 """
 reit2csv - Canadian REIT Price Scrape + Cache
 
+Version: 1.0
+
 This script fetches real-time stock prices for Canadian REITs using Yahoo Finance. It ensures data integrity by maintaining timestamps for unchanged values and only queries Yahoo Finance during market hours (9:30 AM - 4:00 PM EST).
 It saves the collected data to a CSV file which can be used to source your spreadsheet or application.
 
