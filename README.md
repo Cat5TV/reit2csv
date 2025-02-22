@@ -85,7 +85,7 @@ These paths should point to your YAML configuration file and the CSV output loca
 
 If the script encounters an error while fetching data for a ticker, it will first attempt to obtain retroactive data for both 1 day and 5 day values. If it continues to fail, reit2csv will check if it is already in your reits.csv output file. If so, the existing data will remain (rather than being replaced with N/A, for example). If a ticker is generating an error and does not yet exist in the reits.csv file, it will be assumed to be erroneous and not be added to the resulting CSV file. reit2csv will skip the failing ticker and continue processing the remaining tickers.
 
-If running reit2csv from the console, you will see the error output. So if a particular ticker seems to be out of date (I.e., the Timestamp is in the past) you may run the script directly to see what yfinance is saying.
+If running reit2csv from the console, you will see the error output. So if a particular ticker seems to be out of date (I.e., the Timestamp is in the past), or if a ticker in your YAML file is not being saved to the CSV file, you may run the script directly to see what yfinance is saying.
 
 ## Enjoy!
 
