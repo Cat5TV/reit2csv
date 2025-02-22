@@ -44,7 +44,7 @@ To use the collected stock prices in Google Sheets, use the following formula:
 =QUERY(IMPORTDATA("https://example.com/example_path/reits.csv"), "SELECT Col2 WHERE Col1='REI.UN'", 0)
 ```
 
-Replace `https://example.com/example_path/reits.csv` with the actual URL where your CSV file is hosted.
+Replace `https://example.com/example_path/reits.csv` with the actual URL where your CSV file is hosted. Replace `REI.UN` with the REIT you wish to lookup.
 
 ## Configuration
 
