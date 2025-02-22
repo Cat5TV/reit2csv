@@ -1,0 +1,121 @@
+#!/bin/env python3
+"""
+reit2csv - Canadian REIT Price Scrape + Cache
+
+This script fetches real-time stock prices for Canadian REITs using Yahoo Finance. It ensures data integrity by maintaining timestamps for unchanged values and only queries Yahoo Finance during market hours (9:30 AM - 4:00 PM EST).
+It saves the collected data to a CSV file which can be used to source your spreadsheet or application.
+
+Copyright (c) 2025 Robbie Ferguson, Category5 Technology TV
+Website: https://Category5.TV
+Blog: https://baldnerd.com/
+
+Author: Robbie Ferguson // Bald Nerd
+
+Licensed under the MIT License. See LICENSE file for details.
+
+Dependencies:
+- Python 3.x
+- yfinance (Yahoo Finance API) - Install via `pip install yfinance`
+- pyyaml (YAML parser) - Install via `pip install pyyaml` or `apt install python3-yaml`
+- pytz (Timezone handling) - Install via `pip install pytz`
+
+Note: The script will take care of whether the market is open or not (no need to worry about it running after-hours).
+
+Example crontab (run every 15 minutes, only during weekdays). Change to your actual path to reit2csv.
+# Calculate Investment Data
+*/15 * * * 1-5 /home/username/scripts/reit2csv/reit2csv > /dev/null 2>&1
+
+Here's how I load the data into Google Sheets:
+=QUERY(IMPORTDATA("https://example.com/example_path/reits.csv"), "SELECT Col2 WHERE Col1='REI.UN'", 0)
+
+You'll also need to modify these two config options:
+"""
+# Specify the full system path to your config (YAML) file, and CSV Output file
+CONFIG_FILE = '/home/username/scripts/reit2csv/reits_config.yaml'
+CSV_FILE = "/var/www/html/example_path/reits.csv"
+"""
+Enjoy!
+"""
+
+import yfinance as yf
+import csv
+import time
+import yaml
+import os
+from datetime import datetime
+import pytz
+
+# Define timezone for Eastern Time (ET)
+EST = pytz.timezone('America/New_York')
+
+MARKET_OPEN = 9 * 60 + 30  # 9:30 AM in minutes
+MARKET_CLOSE = 16 * 60     # 4:00 PM in minutes
+
+def is_market_open():
+    now = datetime.now(EST)
+    # Note the second + 60: this allows the cron to grab the price for up to 60 minutes past market close, ensuring the closing value gets logged.
+    current_minutes = now.hour * 60 + 60 + now.minute
+    return MARKET_OPEN <= current_minutes <= MARKET_CLOSE
+
+def load_config():
+    with open(CONFIG_FILE, 'r') as file:
+        return yaml.safe_load(file)
+
+def format_ticker(ticker):
+    if ticker.endswith('.UN'):
+        ticker = ticker.replace('.UN', '-UN')
+    return ticker + ".TO"
+
+def fetch_price(ticker):
+    try:
+        stock = yf.Ticker(format_ticker(ticker))
+        hist = stock.history(period='1d')
+        if hist.empty:
+            hist = stock.history(period='5d').dropna()
+        price = hist['Close'].iloc[-1]
+        return round(price, 2)
+    except Exception as e:
+        print(f"Error fetching price for {ticker}: {e}")
+        return "N/A"
+
+def read_existing_data(file_path):
+    if not os.path.exists(file_path):
+        return {}
+    data = {}
+    with open(file_path, mode='r') as file:
+        reader = csv.reader(file)
+        next(reader, None)
+        for row in reader:
+            if len(row) >= 3:
+                data[row[0]] = (row[1], row[2])  # Store price and timestamp
+    return data
+
+def save_to_csv(data, file_path):
+    existing_data = read_existing_data(file_path)
+    with open(file_path, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Ticker", "Price", "Timestamp"])
+        for ticker, price in data.items():
+            if price == "N/A" and ticker in existing_data:
+                price, timestamp = existing_data[ticker]
+            elif price == "N/A":
+                # If this REIT has never been added to the CSV *and* is not reporting a price, don't add it
+                return
+            else:
+                timestamp = datetime.now(EST).strftime('%Y-%m-%d %H:%M:%S')
+            writer.writerow([ticker, price, timestamp])
+
+def main():
+    if not is_market_open():
+        print("Market is closed. Exiting script.")
+        return
+    config = load_config()
+    stocks = config.get('stocks', {})
+    prices = {}
+    for ticker in stocks.keys():
+        prices[ticker] = fetch_price(ticker)
+        time.sleep(1)
+    save_to_csv(prices, CSV_FILE)
+
+if __name__ == "__main__":
+    main()
