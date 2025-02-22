@@ -15,6 +15,10 @@ reit2csv is a Python script that fetches real-time stock prices for Canadian REI
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
+## Important Disclaimer
+
+This script utilizes Yahoo Finance data via the `yfinance` library. Yahoo Finance does not provide official API access, and its data may be subject to rate limiting or service changes at any time. The data retrieved is for informational purposes only and should not be used for financial trading without verification from official sources.
+
 ## Dependencies
 
 reit2csv requires the following dependencies:
