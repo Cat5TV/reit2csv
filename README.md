@@ -44,6 +44,22 @@ To run the script every 15 minutes during weekdays:
 */15 * * * 1-5 /home/username/scripts/reit2csv/reit2csv > /dev/null 2>&1
 ```
 
+## Output
+
+The script generates a `reits.csv` file with the following columns:
+
+- `Ticker`: The REIT's ticker symbol
+- `Price`: The latest fetched price
+- `Timestamp`: The date and time when the price was fetched
+
+Example:
+
+```csv
+Ticker,Price,Timestamp
+CAR.UN,55.23,2025-02-22 13:47:36
+REI.UN,17.89,2025-02-22 13:47:36
+```
+
 ### Loading Data into Google Sheets
 
 To use the collected stock prices in Google Sheets, use the following formula:
