@@ -44,6 +44,8 @@ To run the script every 15 minutes during weekdays:
 */15 * * * 1-5 /home/username/scripts/reit2csv/reit2csv > /dev/null 2>&1
 ```
 
+Change `/home/username/scripts/reit2csv/reit2csv` to the actual path to `reit2csv` on your system.
+
 ## Output
 
 The script generates a `reits.csv` file with the following columns:
