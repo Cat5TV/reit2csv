@@ -72,6 +72,8 @@ To use the collected stock prices in Google Sheets, use the following formula:
 
 Replace `https://example.com/example_path/reits.csv` with the actual URL where your CSV file is hosted. Replace `REI.UN` with the REIT you wish to lookup.
 
+![](sample-spreadsheet.webp)
+
 ### Using Data in Excel
 
 Excel does not have a built-in function like Google Sheets' `IMPORTDATA` function. Instead, users can use **Power Query** to import data from a URL or manually download and load the CSV. To extract the price of a specific REIT, functions like `FILTER` (Excel 365) or `INDEX` & `MATCH` can be used. Perhaps try searching for "Power Query import CSV from URL" or "Excel FILTER function" to find guides on setting it up. I do not use or provide any support for Excel.
