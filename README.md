@@ -89,6 +89,29 @@ CSV_FILE = '/var/www/html/example_path/reits.csv'
 
 These paths should point to your YAML configuration file and the CSV output location, respectively.
 
+### YAML File Structure
+
+The `reits_config.yaml` file is used to define the list of REITs that will be tracked. It follows this structure:
+
+```yaml
+stocks:
+  SRU.UN:
+    name: "SmartCentres REIT"
+    url: "https://finance.yahoo.com/quote/SRU-UN.TO"
+  REI.UN:
+    name: "RioCan REIT"
+    url: "https://finance.yahoo.com/quote/REI-UN.TO"
+  CAR.UN:
+    name: "Canadian Apartment Properties REIT"
+    url: "https://finance.yahoo.com/quote/CAR-UN.TO"
+```
+
+- **Ticker Symbol:** Each REIT is listed by its Yahoo Finance ticker.
+- **Name:** A human-readable name for reference.
+- **URL:** A direct link to Yahoo Finance for easy manual lookup (this is **not used** by the script but is included for reference).
+
+A sample `reits_config.yaml` is included in the repository for easy setup. Be sure to point to it using the `CSV_FILE` string (see `Configuration` above).
+
 ## Error Handling
 
 If the script encounters an error while fetching data for a ticker, it will first attempt to obtain retroactive data for both 1 day and 5 day values. If it continues to fail, reit2csv will check if it is already in your reits.csv output file. If so, the existing data will remain (rather than being replaced with N/A, for example). If a ticker is generating an error and does not yet exist in the reits.csv file, it will be assumed to be erroneous and not be added to the resulting CSV file. reit2csv will skip the failing ticker and continue processing the remaining tickers.
