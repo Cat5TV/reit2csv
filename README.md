@@ -106,7 +106,7 @@ stocks:
     url: "https://finance.yahoo.com/quote/CAR-UN.TO"
 ```
 
-- **Ticker Symbol:** Each REIT is listed by its standard ticker symbol (e.g., SRU.UN). The script automatically converts this to the correct Yahoo Finance format (e.g., SRU-UN.TO) when fetching data.
+- **Ticker Symbol:** The REIT's standard ticker symbol (e.g., SRU.UN). The script automatically converts this to Yahoo Finance's format (e.g., SRU-UN.TO) when fetching data.
 - **Name:** A human-readable name for reference.
 - **URL:** A direct link to Yahoo Finance for easy manual lookup (this is **not used** by the script but is included for reference).
 
