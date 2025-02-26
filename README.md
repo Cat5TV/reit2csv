@@ -17,6 +17,8 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Important Disclaimer
 
+All price quotes retrieved by this script are in **Canadian Dollars (CAD)**, as the script is specifically designed for Canadian REITs.
+
 This script utilizes Yahoo Finance data via the [yfinance library](https://github.com/ranaroussi/yfinance). Yahoo Finance does not provide official API access, and its data may be subject to rate limiting or service changes at any time.
 
 The data retrieved is for informational purposes only and should not be used for financial trading without verification from official sources.
