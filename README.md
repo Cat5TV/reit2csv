@@ -34,7 +34,7 @@ reit2csv requires the following dependencies:
 
 ## Usage
 
-If you prefer not to run the application yourself, you can use our hosted version, provided by Category5 TV:
+If you prefer not to run the application yourself, you can use our hosted version, provided by [Category5 TV](https://category5.tv/):
 
 **[https://category5.tv/tools/investments/reits.csv](https://category5.tv/tools/investments/reits.csv)**
 
