@@ -34,11 +34,11 @@ reit2csv requires the following dependencies:
 
 ## Usage
 
-If you prefer not to run the application yourself, you can use the pre-generated CSV hosted at:
+If you prefer not to run the application yourself, you can use our hosted version, provided by Category5 TV:
 
 **[https://category5.tv/tools/investments/reits.csv](https://category5.tv/tools/investments/reits.csv)**
 
-This file is automatically updated and can be used directly in your spreadsheets or applications.
+This file is automatically updated and can be used directly in your spreadsheets or applications. Please consider [https://patreon.com/Category5](supporting us).
 
 reit2csv is designed to be run as a cron job to continuously update stock data while respecting market hours. The script will automatically handle whether the market is open or closed, so no additional logic is needed in your scheduling setup.
 
@@ -126,4 +126,4 @@ If running reit2csv from the console, you will see the error output. So if a par
 
 ## Enjoy!
 
-If you find this script useful, feel free to contribute or provide feedback!
+If you find this script useful, please consider [https://patreon.com/Category5](supporting us).
