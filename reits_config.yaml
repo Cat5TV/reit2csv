@@ -1,85 +1,124 @@
 stocks:
-  AP.UN:
-    name: Allied Properties REIT
-    url: https://ca.finance.yahoo.com/quote/AP-UN.TO
-  AX.UN:
-    name: Artis REIT
-    url: https://ca.finance.yahoo.com/quote/AX-UN.TO
-  BEI.UN:
-    name: Boardwalk REIT
-    url: https://ca.finance.yahoo.com/quote/BEI-UN.TO
-  CAR.UN:
-    name: Canadian Apartment Properties REIT
-    url: https://ca.finance.yahoo.com/quote/CAR-UN.TO
-  CHP.UN:
-    name: Choice Properties REIT
-    url: https://ca.finance.yahoo.com/quote/CHP-UN.TO
-  CRR.UN:
-    name: Crombie REIT
-    url: https://ca.finance.yahoo.com/quote/CRR-UN.TO
-  CRT.UN:
-    name: CT REIT
-    url: https://ca.finance.yahoo.com/quote/CRT-UN.TO
-  DIR.UN:
-    name: Dream Industrial REIT
-    url: https://ca.finance.yahoo.com/quote/DIR-UN.TO
-  D.UN:
-    name: Dream Office REIT
-    url: https://ca.finance.yahoo.com/quote/D-UN.TO
-  FCR.UN:
-    name: First Capital REIT
-    url: https://ca.finance.yahoo.com/quote/FCR-UN.TO
-  GRT.UN:
-    name: Granite REIT
-    url: https://ca.finance.yahoo.com/quote/GRT-UN.TO
-  HR.UN:
-    name: H&R REIT
-    url: https://ca.finance.yahoo.com/quote/HR-UN.TO
-  IIP.UN:
-    name: InterRent REIT
-    url: https://ca.finance.yahoo.com/quote/IIP-UN.TO
-  KMP.UN:
-    name: Killam Apartment REIT
-    url: https://ca.finance.yahoo.com/quote/KMP-UN.TO
-  MI.UN:
-    name: Minto Apartment REIT
-    url: https://ca.finance.yahoo.com/quote/MI-UN.TO
-  MRG.UN:
-    name: Morguard North American Residential REIT
-    url: https://ca.finance.yahoo.com/quote/MRG-UN.TO
-  MRT.UN:
-    name: Morguard REIT
-    url: https://ca.finance.yahoo.com/quote/MRT-UN.TO
-  NWH.UN:
-    name: NorthWest Healthcare Properties REIT
-    url: https://ca.finance.yahoo.com/quote/NWH-UN.TO
-  PLZ.UN:
-    name: Plaza REIT
-    url: https://ca.finance.yahoo.com/quote/PLZ-UN.TO
-  PMZ.UN:
-    name: Primaris REIT
-    url: https://ca.finance.yahoo.com/quote/PMZ-UN.TO
-  PRV.UN:
-    name: Pro REIT
-    url: https://ca.finance.yahoo.com/quote/PRV-UN.TO
-  REI.UN:
-    name: RioCan REIT
-    url: https://ca.finance.yahoo.com/quote/REI-UN.TO
+  # Canadian REITs (Prices in CAD)
   SRU.UN:
-    name: SmartCentres REIT
-    url: https://ca.finance.yahoo.com/quote/SRU-UN.TO
-  SOT.UN:
-    name: Slate Office REIT
-    url: https://ca.finance.yahoo.com/quote/SOT-UN.TO
-  SRR.UN:
-    name: Slate Retail REIT
-    url: https://ca.finance.yahoo.com/quote/SRR-UN.TO
-  SMU.UN:
-    name: Summit Industrial Income REIT
-    url: https://ca.finance.yahoo.com/quote/SMU-UN.TO
-  TGA.UN:
-    name: True North Commercial REIT
-    url: https://ca.finance.yahoo.com/quote/TGA-UN.TO
-  TNT.UN:
-    name: True North Apartment REIT
-    url: https://ca.finance.yahoo.com/quote/TNT-UN.TO
+    name: "SmartCentres REIT"
+    url: "https://finance.yahoo.com/quote/SRU-UN.TO"
+  REI.UN:
+    name: "RioCan REIT"
+    url: "https://finance.yahoo.com/quote/REI-UN.TO"
+  CAR.UN:
+    name: "Canadian Apartment Properties REIT"
+    url: "https://finance.yahoo.com/quote/CAR-UN.TO"
+  CHP.UN:
+    name: "Choice Properties REIT"
+    url: "https://finance.yahoo.com/quote/CHP-UN.TO"
+  GRT.UN:
+    name: "Granite REIT"
+    url: "https://finance.yahoo.com/quote/GRT-UN.TO"
+  DIR.UN:
+    name: "Dream Industrial REIT"
+    url: "https://finance.yahoo.com/quote/DIR-UN.TO"
+  IIP.UN:
+    name: "InterRent REIT"
+    url: "https://finance.yahoo.com/quote/IIP-UN.TO"
+  NWH.UN:
+    name: "NorthWest Healthcare Properties REIT"
+    url: "https://finance.yahoo.com/quote/NWH-UN.TO"
+  CRT.UN:
+    name: "CT REIT"
+    url: "https://finance.yahoo.com/quote/CRT-UN.TO"
+  FCR.UN:
+    name: "First Capital REIT"
+    url: "https://finance.yahoo.com/quote/FCR-UN.TO"
+  HR.UN:
+    name: "H&R REIT"
+    url: "https://finance.yahoo.com/quote/HR-UN.TO"
+  BEI.UN:
+    name: "Boardwalk REIT"
+    url: "https://finance.yahoo.com/quote/BEI-UN.TO"
+  KMP.UN:
+    name: "Killam Apartment REIT"
+    url: "https://finance.yahoo.com/quote/KMP-UN.TO"
+  MRG.UN:
+    name: "Morguard REIT"
+    url: "https://finance.yahoo.com/quote/MRG-UN.TO"
+  PLZ.UN:
+    name: "Plaza REIT"
+    url: "https://finance.yahoo.com/quote/PLZ-UN.TO"
+  AAR.UN:
+    name: "Allied Properties REIT"
+    url: "https://finance.yahoo.com/quote/AP-UN.TO"
+  CRR.UN:
+    name: "Crombie REIT"
+    url: "https://finance.yahoo.com/quote/CRR-UN.TO"
+  MRG.UN:
+    name: "Morguard REIT"
+    url: "https://finance.yahoo.com/quote/MRG-UN.TO"
+
+  # US REITs (Prices in USD)
+  O:
+    name: "Realty Income Corporation"
+    url: "https://finance.yahoo.com/quote/O"
+  SPG:
+    name: "Simon Property Group"
+    url: "https://finance.yahoo.com/quote/SPG"
+  WELL:
+    name: "Welltower Inc."
+    url: "https://finance.yahoo.com/quote/WELL"
+  VICI:
+    name: "VICI Properties Inc."
+    url: "https://finance.yahoo.com/quote/VICI"
+  AVB:
+    name: "AvalonBay Communities, Inc."
+    url: "https://finance.yahoo.com/quote/AVB"
+  EQR:
+    name: "Equity Residential"
+    url: "https://finance.yahoo.com/quote/EQR"
+  ESS:
+    name: "Essex Property Trust, Inc."
+    url: "https://finance.yahoo.com/quote/ESS"
+  PSA:
+    name: "Public Storage"
+    url: "https://finance.yahoo.com/quote/PSA"
+  PLD:
+    name: "Prologis, Inc."
+    url: "https://finance.yahoo.com/quote/PLD"
+  AMT:
+    name: "American Tower Corporation"
+    url: "https://finance.yahoo.com/quote/AMT"
+  CCI:
+    name: "Crown Castle International"
+    url: "https://finance.yahoo.com/quote/CCI"
+  DLR:
+    name: "Digital Realty Trust"
+    url: "https://finance.yahoo.com/quote/DLR"
+  EQIX:
+    name: "Equinix, Inc."
+    url: "https://finance.yahoo.com/quote/EQIX"
+  EXR:
+    name: "Extra Space Storage"
+    url: "https://finance.yahoo.com/quote/EXR"
+  FRT:
+    name: "Federal Realty Investment Trust"
+    url: "https://finance.yahoo.com/quote/FRT"
+  HST:
+    name: "Host Hotels & Resorts"
+    url: "https://finance.yahoo.com/quote/HST"
+  NNN:
+    name: "National Retail Properties"
+    url: "https://finance.yahoo.com/quote/NNN"
+  OHI:
+    name: "Omega Healthcare Investors"
+    url: "https://finance.yahoo.com/quote/OHI"
+  SUI:
+    name: "Sun Communities, Inc."
+    url: "https://finance.yahoo.com/quote/SUI"
+  VTR:
+    name: "Ventas, Inc."
+    url: "https://finance.yahoo.com/quote/VTR"
+  WPC:
+    name: "W.P. Carey Inc."
+    url: "https://finance.yahoo.com/quote/WPC"
+  WY:
+    name: "Weyerhaeuser Company"
+    url: "https://finance.yahoo.com/quote/WY"

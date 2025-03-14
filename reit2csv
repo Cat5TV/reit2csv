@@ -1,11 +1,14 @@
 #!/bin/env python3
 """
-reit2csv - Canadian REIT Price Scrape + Cache
+reit2csv - Canadian & US REIT Price Scrape + Cache
 
-Version: 1.0
+Version: 1.1
 
-This script fetches real-time stock prices for Canadian REITs using Yahoo Finance. It ensures data integrity by maintaining timestamps for unchanged values and only queries Yahoo Finance during market hours (9:30 AM - 4:00 PM EST).
-It saves the collected data to a CSV file which can be used to source your spreadsheet or application.
+reit2csv is a Python script that fetches real-time stock prices for REITs in Canada and USA using Yahoo Finance. It
+ensures data integrity by maintaining timestamps for unchanged values and only queries Yahoo Finance during market
+hours. The collected data is stored in a CSV file, which can be used as a data source for spreadsheets or applications.
+
+The script includes rate-limiting measures to prevent exceeding Yahoo Finance's request limits.
 
 Copyright (c) 2025 Robbie Ferguson, Category5 Technology TV
 Website: https://Category5.TV
@@ -33,8 +36,8 @@ Here's how I load the data into Google Sheets:
 You'll also need to modify these two config options:
 """
 # Specify the full system path to your config (YAML) file, and CSV Output file
-CONFIG_FILE = '/home/username/scripts/reit2csv/reits_config.yaml'
-CSV_FILE = "/var/www/html/example_path/reits.csv"
+CONFIG_FILE = './reits_config.yaml' # Make sure you set the FULL path (otherwise this won't work in a cronjob)
+CSV_FILE = "/tmp/reits.csv" # Set the full destination path for output. E.g., /var/www/html/reits.csv
 """
 Enjoy!
 """
@@ -53,10 +56,13 @@ EST = pytz.timezone('America/New_York')
 MARKET_OPEN = 9 * 60 + 30  # 9:30 AM in minutes
 MARKET_CLOSE = 16 * 60     # 4:00 PM in minutes
 
+REQUEST_DELAY = 15  # Delay in seconds between API calls to prevent rate limiting
+BATCH_SIZE = 10  # Number of tickers to fetch in one batch request
+
 def is_market_open():
     now = datetime.now(EST)
-    # Note the second + 60: this allows the cron to grab the price for up to 60 minutes past market close, ensuring the closing value gets logged.
-    current_minutes = now.hour * 60 + 60 + now.minute
+    # Note the + 30: this allows the cron to grab the price for up to 30 minutes past market close, ensuring the closing price gets logged
+    current_minutes = now.hour * 60 + 30 + now.minute
     return MARKET_OPEN <= current_minutes <= MARKET_CLOSE
 
 def load_config():
@@ -65,20 +71,33 @@ def load_config():
 
 def format_ticker(ticker):
     if ticker.endswith('.UN'):
-        ticker = ticker.replace('.UN', '-UN')
-    return ticker + ".TO"
+        return ticker.replace('.UN', '-UN') + ".TO"  # Re-format for Yahoo Finance's Canadian REIT format
+    return ticker  # Not a Canadian REIT, so leave as is without any re-formatting
 
-def fetch_price(ticker):
+def fetch_prices(tickers):
+    formatted_tickers = [format_ticker(ticker) for ticker in tickers]
+    print(f"Fetching prices for: {formatted_tickers}")  # Debugging output
+
     try:
-        stock = yf.Ticker(format_ticker(ticker))
-        hist = stock.history(period='1d')
-        if hist.empty:
-            hist = stock.history(period='5d').dropna()
-        price = hist['Close'].iloc[-1]
-        return round(price, 2)
+        stocks = yf.Tickers(formatted_tickers)
+        prices = {}
+        for ticker in tickers:
+            stock_data = stocks.tickers.get(format_ticker(ticker))
+            if stock_data:
+                hist = stock_data.history(period='1d')
+                if hist.empty:
+                    hist = stock_data.history(period='5d').dropna()
+                #print(f"Data for {ticker}: {hist}")  # Log full stock data
+                if not hist.empty:
+                    prices[ticker] = round(hist['Close'].iloc[-1], 2)
+                else:
+                    prices[ticker] = "N/A"
+            else:
+                prices[ticker] = "N/A"
+        return prices
     except Exception as e:
-        print(f"Error fetching price for {ticker}: {e}")
-        return "N/A"
+        print(f"Error fetching batch prices: {e}")
+        return {ticker: "N/A" for ticker in tickers}
 
 def read_existing_data(file_path):
     if not os.path.exists(file_path):
@@ -94,29 +113,33 @@ def read_existing_data(file_path):
 
 def save_to_csv(data, file_path):
     existing_data = read_existing_data(file_path)
+    data = {ticker: price for ticker, price in data.items() if price != "N/A" or ticker in existing_data} # Add price data. If a REIT has never been added to the CSV and is not reporting a price, don't add it
     with open(file_path, mode='w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["Ticker", "Price", "Timestamp"])
+        writer.writerow(["Ticker", "Price", "Timestamp", "Currency"])
         for ticker, price in data.items():
+            currency = "CAD" if ticker.endswith('.UN') else "USD"
             if price == "N/A" and ticker in existing_data:
                 price, timestamp = existing_data[ticker]
-            elif price == "N/A":
-                # If this REIT has never been added to the CSV *and* is not reporting a price, don't add it
-                return
             else:
                 timestamp = datetime.now(EST).strftime('%Y-%m-%d %H:%M:%S')
-            writer.writerow([ticker, price, timestamp])
+            writer.writerow([ticker, price, timestamp, currency])
 
 def main():
     if not is_market_open():
         print("Market is closed. Exiting script.")
         return
+
     config = load_config()
-    stocks = config.get('stocks', {})
+    stocks = list(config.get('stocks', {}).keys())
     prices = {}
-    for ticker in stocks.keys():
-        prices[ticker] = fetch_price(ticker)
-        time.sleep(1)
+
+    for i in range(0, len(stocks), BATCH_SIZE):
+        batch = stocks[i:i + BATCH_SIZE]
+        batch_prices = fetch_prices(batch)
+        prices.update(batch_prices)
+        time.sleep(REQUEST_DELAY)  # Prevent rate limiting
+
     save_to_csv(prices, CSV_FILE)
 
 if __name__ == "__main__":

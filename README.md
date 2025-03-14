@@ -1,8 +1,10 @@
-# reit2csv - Canadian REIT Price Scrape + Cache
+# reit2csv - Canadian & US REIT Price Scrape + Cache
 
 ## Overview
 
-reit2csv is a Python script that fetches real-time stock prices for Canadian REITs using Yahoo Finance. It ensures data integrity by maintaining timestamps for unchanged values and only queries Yahoo Finance during market hours (9:30 AM - 4:00 PM EST). The collected data is stored in a CSV file, which can be used as a data source for spreadsheets or applications.
+reit2csv is a Python script that fetches real-time stock prices for REITs in Canada and USA using Yahoo Finance. It ensures data integrity by maintaining timestamps for unchanged values and only queries Yahoo Finance during market hours. The collected data is stored in a CSV file, which can be used as a data source for spreadsheets or applications.
+
+The script includes rate-limiting measures to prevent exceeding Yahoo Finance's request limits.
 
 ## Copyright & Author
 
@@ -61,13 +63,18 @@ The script generates a `reits.csv` file with the following columns:
 - `Ticker`: The REIT's ticker symbol
 - `Price`: The latest fetched price
 - `Timestamp`: The date and time when the price was fetched
+- `Currency`: The currency (CAD/USD) of the REIT
 
 Example:
 
 ```csv
-Ticker,Price,Timestamp
-CAR.UN,55.23,2025-02-22 13:47:36
-REI.UN,17.89,2025-02-22 13:47:36
+Ticker,Price,Timestamp,Currency
+SRU.UN,25.4,2025-03-10 15:01:11,CAD
+REI.UN,18.61,2025-03-10 15:01:11,CAD
+CAR.UN,40.47,2025-03-10 15:01:11,CAD
+O,58.58,2025-03-10 15:01:11,USD
+SPG,164.68,2025-03-10 15:01:11,USD
+WELL,145.12,2025-03-10 15:01:11,USD
 ```
 
 ### Loading Data into Google Sheets
@@ -103,6 +110,7 @@ The `reits_config.yaml` file is used to define the list of REITs that will be tr
 
 ```yaml
 stocks:
+  # Canadian REITs (Prices in CAD)
   SRU.UN:
     name: "SmartCentres REIT"
     url: "https://finance.yahoo.com/quote/SRU-UN.TO"
@@ -112,13 +120,24 @@ stocks:
   CAR.UN:
     name: "Canadian Apartment Properties REIT"
     url: "https://finance.yahoo.com/quote/CAR-UN.TO"
+
+  # US REITs (Prices in USD)
+  O:
+    name: "Realty Income Corporation"
+    url: "https://finance.yahoo.com/quote/O"
+  SPG:
+    name: "Simon Property Group"
+    url: "https://finance.yahoo.com/quote/SPG"
+  WELL:
+    name: "Welltower Inc."
+    url: "https://finance.yahoo.com/quote/WELL"
 ```
 
-- **Ticker Symbol:** The REIT's standard ticker symbol (e.g., SRU.UN). The script automatically converts this to Yahoo Finance's format (e.g., SRU-UN.TO) when fetching data.
+- **Ticker Symbol:** The REIT's standard ticker symbol (e.g., SRU.UN or SPG). The script automatically converts Canadian .UN tickers to Yahoo Finance's format (e.g., SRU-UN.TO) when fetching data, and uses this to determine the REIT currency.
 - **Name:** A human-readable name for reference.
 - **URL:** A direct link to Yahoo Finance for easy manual lookup (this is **not used** by the script but is included for reference).
 
-A sample `reits_config.yaml` is included in the repository for easy setup. Be sure to point to it using the `CSV_FILE` string (see `Configuration` above).
+A sample `reits_config.yaml` is included in the repository for easy setup. Be sure to point to it using the `CONFIG_FILE` string (see `Configuration` above). Remove any REITs you don't need, and add any that are missing.
 
 ## Error Handling
 
