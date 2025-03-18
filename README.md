@@ -38,20 +38,6 @@ reit2csv requires the following dependencies:
 
 ## Usage
 
-### Hosted Version
-
-If you prefer not to run the application yourself, you can use our hosted version, provided by [Category5 TV](https://category5.tv/):
-
-**[https://category5.tv/tools/investments/reits.csv](https://category5.tv/tools/investments/reits.csv)**
-
-- This file is automatically updated and can be used directly in your spreadsheets or applications.
-- Timestamps in the hosted file are Eastern (Toronto/New York) timezone.
-- The hosted file (as well as the application) is for personal use only.
-- The data in the hosted file is a result of the `reit2csv` script in this repository. This information should be used as an educational tool, but you should always fact check and cross-reference data with trusted sources before making trading decisions.
-- Please consider [supporting me](https://patreon.com/Category5) and the free projects and educational tools I create.
-
-### Run It Yourself
-
 reit2csv is designed to be run as a cron job to continuously update stock data while respecting market hours. The script will automatically handle whether the market is open or closed, so no additional logic is needed in your scheduling setup.
 
 ### Example Crontab Entry
@@ -146,6 +132,18 @@ stocks:
 - **URL:** A direct link to Yahoo Finance for easy manual lookup (this is **not used** by the script but is included for reference).
 
 A sample `reits_config.yaml` is included in the repository for easy setup. Be sure to point to it using the `CONFIG_FILE` string (see `Configuration` above). Remove any REITs you don't need, and add any that are missing.
+
+### Hosted Version
+
+If you prefer not to run the application yourself, you can use our hosted version, provided by [Category5 TV](https://category5.tv/):
+
+**[https://category5.tv/tools/investments/reits.csv](https://category5.tv/tools/investments/reits.csv)**
+
+- This file is automatically updated and can be used directly in your spreadsheets or applications.
+- Timestamps in the hosted file are Eastern (Toronto/New York) timezone.
+- The hosted file (as well as the application) is for personal use only.
+- The data in the hosted file is a result of the `reit2csv` script in this repository. This information should be used as an educational tool, but you should always fact check and cross-reference data with trusted sources before making trading decisions.
+- Please consider [supporting me](https://patreon.com/Category5) and the free projects and educational tools I create.
 
 ## Error Handling
 
