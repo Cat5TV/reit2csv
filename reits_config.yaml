@@ -9,6 +9,9 @@ stocks:
   CAR.UN:
     name: "Canadian Apartment Properties REIT"
     url: "https://finance.yahoo.com/quote/CAR-UN.TO"
+  CSH.UN:
+    name: "Chartwell Retirement Residences REIT"
+    url: "https://finance.yahoo.com/quote/CSH-UN.TO"
   CHP.UN:
     name: "Choice Properties REIT"
     url: "https://finance.yahoo.com/quote/CHP-UN.TO"
