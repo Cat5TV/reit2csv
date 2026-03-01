@@ -54,9 +54,6 @@ stocks:
   CRR.UN:
     name: "Crombie REIT"
     url: "https://finance.yahoo.com/quote/CRR-UN.TO"
-  MRG.UN:
-    name: "Morguard REIT"
-    url: "https://finance.yahoo.com/quote/MRG-UN.TO"
 
   # US REITs (Prices in USD)
   O:
@@ -125,3 +122,8 @@ stocks:
   WY:
     name: "Weyerhaeuser Company"
     url: "https://finance.yahoo.com/quote/WY"
+  # Hedged EFTs
+  MU_CDR:
+    name: "Micron CDR (CAD Hedged)"
+    yahoo: "MU.NE"
+    currency: "CAD"

@@ -2,13 +2,11 @@
 """
 reit2csv - Canadian & US REIT Price Scrape + Cache
 
-Version: 1.1
+Version: 1.2
 
-reit2csv is a Python script that fetches real-time stock prices for REITs in Canada and USA using Yahoo Finance. It
-ensures data integrity by maintaining timestamps for unchanged values and only queries Yahoo Finance during market
-hours. The collected data is stored in a CSV file, which can be used as a data source for spreadsheets or applications.
+This script fetches real-time stock prices for Canadian and US REITs using Yahoo Finance. It ensures data integrity by maintaining timestamps for unchanged values and only runs during market hours (9:30 AM - 4:00 PM EST).
 
-The script includes rate-limiting measures to prevent exceeding Yahoo Finance's request limits.
+It saves the collected data to a CSV file which can be used to source your spreadsheet or application.
 
 Copyright (c) 2025 Robbie Ferguson, Category5 Technology TV
 Website: https://Category5.TV
@@ -36,8 +34,8 @@ Here's how I load the data into Google Sheets:
 You'll also need to modify these two config options:
 """
 # Specify the full system path to your config (YAML) file, and CSV Output file
-CONFIG_FILE = './reits_config.yaml' # Make sure you set the FULL path (otherwise this won't work in a cronjob)
-CSV_FILE = "/tmp/reits.csv" # Set the full destination path for output. E.g., /var/www/html/reits.csv
+CONFIG_FILE = '/home/cat5tv_main/cron/investments/reits_config.yaml'
+CSV_FILE = "/home/cat5tv_main/category5.tv/tools/investments/reits.csv"
 """
 Enjoy!
 """
@@ -69,35 +67,43 @@ def load_config():
     with open(CONFIG_FILE, 'r') as file:
         return yaml.safe_load(file)
 
-def format_ticker(ticker):
-    if ticker.endswith('.UN'):
-        return ticker.replace('.UN', '-UN') + ".TO"  # Re-format for Yahoo Finance's Canadian REIT format
-    return ticker  # Not a Canadian REIT, so leave as is without any re-formatting
+def resolve_yahoo_symbol(display_ticker: str, config: dict) -> str:
+    meta = (config.get('stocks', {}) or {}).get(display_ticker, {}) or {}
+    # If explicitly provided, always use it.
+    if isinstance(meta, dict) and meta.get('yahoo'):
+        return str(meta['yahoo']).strip()
 
-def fetch_prices(tickers):
-    formatted_tickers = [format_ticker(ticker) for ticker in tickers]
-    print(f"Fetching prices for: {formatted_tickers}")  # Debugging output
+    # Backward-compatible behavior for REIT .UN tickers circa v1.1
+    if display_ticker.endswith('.UN'):
+        return display_ticker.replace('.UN', '-UN') + ".TO"
+
+    return display_ticker
+
+def fetch_prices(tickers, config):
+    formatted = [resolve_yahoo_symbol(t, config) for t in tickers]
+    print(f"Fetching prices for: {formatted}")
 
     try:
-        stocks = yf.Tickers(formatted_tickers)
+        stocks = yf.Tickers(formatted)
         prices = {}
-        for ticker in tickers:
-            stock_data = stocks.tickers.get(format_ticker(ticker))
+
+        for display_ticker in tickers:
+            ysym = resolve_yahoo_symbol(display_ticker, config)
+            stock_data = stocks.tickers.get(ysym)
+
             if stock_data:
                 hist = stock_data.history(period='1d')
                 if hist.empty:
                     hist = stock_data.history(period='5d').dropna()
-                #print(f"Data for {ticker}: {hist}")  # Log full stock data
-                if not hist.empty:
-                    prices[ticker] = round(hist['Close'].iloc[-1], 2)
-                else:
-                    prices[ticker] = "N/A"
+
+                prices[display_ticker] = round(hist['Close'].iloc[-1], 2) if not hist.empty else "N/A"
             else:
-                prices[ticker] = "N/A"
+                prices[display_ticker] = "N/A"
+
         return prices
     except Exception as e:
         print(f"Error fetching batch prices: {e}")
-        return {ticker: "N/A" for ticker in tickers}
+        return {t: "N/A" for t in tickers}
 
 def read_existing_data(file_path):
     if not os.path.exists(file_path):
@@ -111,14 +117,20 @@ def read_existing_data(file_path):
                 data[row[0]] = (row[1], row[2])  # Store price and timestamp
     return data
 
-def save_to_csv(data, file_path):
+def get_currency_for(display_ticker: str, config: dict) -> str:
+    meta = (config.get('stocks', {}) or {}).get(display_ticker, {}) or {}
+    if isinstance(meta, dict) and meta.get('currency'):
+        return str(meta['currency']).strip().upper()
+    return "CAD"  # sane default for Canadian-focused sheets
+
+def save_to_csv(data, file_path, config):
     existing_data = read_existing_data(file_path)
     data = {ticker: price for ticker, price in data.items() if price != "N/A" or ticker in existing_data} # Add price data. If a REIT has never been added to the CSV and is not reporting a price, don't add it
     with open(file_path, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(["Ticker", "Price", "Timestamp", "Currency"])
         for ticker, price in data.items():
-            currency = "CAD" if ticker.endswith('.UN') else "USD"
+            currency = get_currency_for(ticker, config)
             if price == "N/A" and ticker in existing_data:
                 price, timestamp = existing_data[ticker]
             else:
@@ -136,11 +148,11 @@ def main():
 
     for i in range(0, len(stocks), BATCH_SIZE):
         batch = stocks[i:i + BATCH_SIZE]
-        batch_prices = fetch_prices(batch)
+        batch_prices = fetch_prices(batch, config)
         prices.update(batch_prices)
         time.sleep(REQUEST_DELAY)  # Prevent rate limiting
 
-    save_to_csv(prices, CSV_FILE)
+    save_to_csv(prices, CSV_FILE, config)
 
 if __name__ == "__main__":
     main()
