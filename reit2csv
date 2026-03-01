@@ -34,8 +34,8 @@ Here's how I load the data into Google Sheets:
 You'll also need to modify these two config options:
 """
 # Specify the full system path to your config (YAML) file, and CSV Output file
-CONFIG_FILE = '/home/cat5tv_main/cron/investments/reits_config.yaml'
-CSV_FILE = "/home/cat5tv_main/category5.tv/tools/investments/reits.csv"
+CONFIG_FILE = '/location/reits_config.yaml'
+CSV_FILE = "/location/reits.csv"
 """
 Enjoy!
 """
